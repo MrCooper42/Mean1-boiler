@@ -1,6 +1,6 @@
-import { AppPage } from './app.po';
+import {AppPage} from './app.po';
 
-describe('portfolio App', () => {
+describe('MEAN2-BoilerPlate App', () => {
   let page: AppPage;
 
   beforeEach(() => {
@@ -8,7 +8,7 @@ describe('portfolio App', () => {
   });
 
   it('should display welcome message', () => {
-    page.navigateTo();
-    expect(page.getParagraphText()).toEqual('Welcome to app!');
+    AppPage.navigateTo();
+    expect(AppPage.getParagraphText()).toEqual('Welcome to app!');
   });
 });

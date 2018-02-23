@@ -1,11 +1,11 @@
 {
   "$schema": "./node_modules/@angular/cli/lib/config/schema.json",
   "project": {
-    "name": "portfolio"
+    "name": "MEAN2-BoilerPlate"
   },
   "apps": [
     {
-      "root": "./client/src",
+      "root": "client/src",
       "outDir": "dist",
       "assets": [
         "assets",
@@ -19,6 +19,7 @@
       "testTsconfig": "tsconfig.spec.json",
       "prefix": "app",
       "styles": [
+        "../../node_modules/bootstrap/dist/css/bootstrap.min.css",
         "styles.css"
       ],
       "scripts": [],
@@ -36,14 +37,16 @@
   },
   "lint": [
     {
-      "files": "client/src/**/*.ts",
-      "project": "./client/src/tsconfig.app.json"
+      "project": "./client/src/tsconfig.app.json",
+      "exclude": "**/node_modules/**"
     },
     {
-      "project": "./client/src/tsconfig.spec.json"
+      "project": "./client/src/tsconfig.spec.json",
+      "exclude": "**/node_modules/**"
     },
     {
-      "project": "./client/e2e/tsconfig.e2e.json"
+      "project": "./client/e2e/tsconfig.e2e.json",
+      "exclude": "**/node_modules/**"
     }
   ],
   "test": {

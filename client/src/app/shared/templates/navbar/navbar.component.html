@@ -1,0 +1,46 @@
+<nav class="navbar navbar-expand-md navbar-dark bg-dark mb-4">
+  <a class="navbar-brand" routerLink="/home">MEAN2-BoilerPlate</a>
+  <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent"
+          aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation"
+          (click)="toggleShow()">
+    <span class="navbar-toggler-icon"></span>
+  </button>
+  <div class="collapse navbar-collapse" id="navbarSupportedContent" [ngbCollapse]="show">
+    <ul class="nav navbar-nav">
+      <li>
+        <div ngbDropdown class="d-inline-block">
+          <button class="btn btn-secondary" id="dropdownBasic1" ngbDropdownToggle>Contribute</button>
+          <div ngbDropdownMenu aria-labelledby="dropdownBasic1">
+            <button class="dropdown-item">Action - 1</button>
+            <button class="dropdown-item">Another Action</button>
+            <button class="dropdown-item">Something else is here</button>
+          </div>
+        </div>
+      </li>
+      <li>
+        <div ngbDropdown class="d-inline-block">
+          <button class="btn btn-dark" id="dropdownBasic2" ngbDropdownToggle>About Us</button>
+          <div ngbDropdownMenu aria-labelledby="dropdownBasic1">
+            <button class="dropdown-item">Action - 1</button>
+            <button class="dropdown-item">Another Action</button>
+            <button class="dropdown-item">Something else is here</button>
+          </div>
+        </div>
+      </li>
+    </ul>
+    <ul [ngClass]="getNavSize()">
+      <li *ngIf="!auth.isLoggedIn()" class="nav-item">
+        <a class="nav-link" routerLink="/register">Register</a>
+      </li>
+      <li *ngIf="!auth.isLoggedIn()" class="nav-item">
+        <a class="nav-link" routerLink="/login">Login</a>
+      </li>
+      <li *ngIf="auth.isLoggedIn()" class="nav-item">
+        <a class="nav-link" routerLink="/profile">{{ auth.getUserDetails()?.name }}</a>
+      </li>
+      <li *ngIf="auth.isLoggedIn()" class="nav-item">
+        <a class="nav-link" routerLink="/logout" (click)="auth.logout()">Logout</a>
+      </li>
+    </ul>
+  </div>
+</nav>
