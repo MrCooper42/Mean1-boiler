@@ -21,7 +21,7 @@ import { NewsComponent } from './news/news.component';
   ],
   imports: [
     NgbModule.forRoot(),
-    BrowserModule,
+    BrowserModule.withServerTransition({appId: 'Mean2-boiler'}),
     AppRoutingModule,
     SharedModule,
     FormsModule,
