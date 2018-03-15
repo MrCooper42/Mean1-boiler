@@ -1,10 +1,10 @@
-import {NgModule} from '@angular/core';
-import {ServerModule, ServerTransferStateModule} from '@angular/platform-server';
-import {ModuleMapLoaderModule} from '@nguniversal/module-map-ngfactory-loader';
+import { NgModule } from '@angular/core';
+import { ServerModule, ServerTransferStateModule } from '@angular/platform-server';
+import { ModuleMapLoaderModule } from '@nguniversal/module-map-ngfactory-loader';
 import { HTTP_INTERCEPTORS } from '@angular/common/http';
 
-import {AppModule} from './app.module';
-import {AppComponent} from './app.component';
+import { AppModule } from './app.module';
+import { AppComponent } from './app.component';
 import { ServerHttpInterceptor } from './shared/services/server-http-interceptor';
 
 @NgModule({
@@ -27,4 +27,5 @@ import { ServerHttpInterceptor } from './shared/services/server-http-interceptor
   // imported AppModule, it needs to be repeated here.
   bootstrap: [AppComponent],
 })
-export class AppServerModule { }
+export class AppServerModule {
+}

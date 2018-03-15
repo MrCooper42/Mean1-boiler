@@ -26,24 +26,24 @@ const jwt = require('express-jwt');
 const mongoose = require('mongoose');
 const MongoStore = require('connect-mongo')(session);
 
-const keyConfig = require('config/keys.js');
+const keyConfig = require('./api/config/keys.js');
 
-const DIST_FOLDER = path.join(process.cwd(), '../dist');
-const template = fs.readFileSync(path.join(DIST_FOLDER, 'client', 'index.html')).toString();
+const DIST_FOLDER = path.join(process.cwd(), './dist');
+const template = fs.readFileSync(path.join(DIST_FOLDER, 'client', 'index.html'));
 const { AppServerModuleNgFactory, LAZY_MODULE_MAP } = require('../dist/server/main.bundle');
 
 const PORT = process.env.PORT || 3000;
 
 const auth = jwt({
-  secret: `${keyConfig.JWT_SECRET}`, // TODO: make this use the config folder
+  secret: `${keyConfig.JWT_SECRET}`,
   userProperty: 'payload'
 });
 
 // mongoose models
-require('models/db.js');
+require('./api/models/db.js');
 
 // services
-require('services/passport');
+require('./api/services/passport.js');
 
 // connect mongoDB
 if (keyConfig.mongoURI) {
@@ -76,7 +76,7 @@ app.engine('html', ngExpressEngine({
   ]
 }));
 app.set('view engine', 'html');
-app.set('views', path.join(DIST_FOLDER, 'browser'));
+app.set('views', path.join(DIST_FOLDER, 'client'));
 
 app.use(logger('dev'));
 app.use(bodyParser.urlencoded({extended: false}));
@@ -110,6 +110,7 @@ app.use((req, res, next) => {
 });
 
 app.get('/', angularRouter);
+app.get('/login', angularRouter);
 
 app.use('/auth', authRoutes);
 // app.use('/api', billingRoutes);
@@ -118,12 +119,12 @@ app.use('/auth', authRoutes);
 // app.use('/admin', adminRoutes);
 
 
-app.get('*.*', express.static(path.join(DIST_FOLDER, 'browser')));
+app.get('*.*', express.static(path.join(DIST_FOLDER, 'client')));
 
-app.use(express.static(`${__dirname}/dist/client`));
+// app.use(express.static(`${__dirname}/../dist/client`));
 
 app.get('*', (req, res) => {
-  res.render(path.join(DIST_FOLDER, 'browser', 'index.html'), { req });
+  res.render(path.join(DIST_FOLDER, 'client', 'index.html'), { req });
 });
 
 // compress files

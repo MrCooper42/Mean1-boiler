@@ -3,6 +3,7 @@ import { HttpClient } from '@angular/common/http';
 import { Router } from '@angular/router';
 import { Observable } from 'rxjs/Observable';
 import { map } from 'rxjs/operators';
+import { isPlatformBrowser } from '@angular/common';
 
 export interface UserDetails {
   _id: string;
@@ -25,22 +26,37 @@ export interface TokenPayload {
 @Injectable()
 export class AuthenticationService {
   private token: string;
-
-  constructor(private http: HttpClient, private router: Router) {
-  }
-
-  private saveToken = (token: string): void => {
-    localStorage.setItem('mean-token', token);
-    this.token = token;
-  }
-
-  private getToken = (): string => {
-    if (!this.token) {
-      this.token = localStorage.getItem('mean-token');
+  public logout = (): void => {
+    this.token = '';
+    if (isPlatformBrowser) {
+      window.localStorage.removeItem('mean-token');
     }
-    return this.token;
+    this.router.navigateByUrl('/');
   }
-
+  public isLoggedIn = (): boolean => {
+    const user = this.getUserDetails();
+    if (user) {
+      return user.exp > Date.now() / 1000;
+    } else {
+      return false;
+    }
+  }
+  public register = (user: TokenPayload): Observable<any> => this.userRequest('post', 'user/register', user);
+  public login = (user: TokenPayload): Observable<any> => this.userRequest('post', 'user/login', user);
+  public profile = (): Observable<any> => this.userRequest('get', 'user/profile');
+  private saveToken = (token: string): void => {
+    if (isPlatformBrowser) {
+      localStorage.setItem('mean-token', token);
+      this.token = token;
+    }
+  }
+  private getToken = (): string => {
+    if (!this.token && isPlatformBrowser) {
+      this.token = localStorage.getItem('mean-token');
+      return this.token;
+    }
+    return null;
+  }
   // TODO: Add error handling
   private userRequest = (method: 'post' | 'get', type: 'user/login' | 'user/register' | 'user/profile',
                          user?: TokenPayload): Observable<any> => {
@@ -63,10 +79,7 @@ export class AuthenticationService {
     return request;
   }
 
-  public logout = (): void => {
-    this.token = '';
-    window.localStorage.removeItem('mean-token');
-    this.router.navigateByUrl('/');
+  constructor(private http: HttpClient, private router: Router) {
   }
 
   public getUserDetails(): UserDetails {
@@ -80,19 +93,4 @@ export class AuthenticationService {
       return null;
     }
   }
-
-  public isLoggedIn = (): boolean => {
-    const user = this.getUserDetails();
-    if (user) {
-      return user.exp > Date.now() / 1000;
-    } else {
-      return false;
-    }
-  }
-
-  public register = (user: TokenPayload): Observable<any> => this.userRequest('post', 'user/register', user);
-
-  public login = (user: TokenPayload): Observable<any> => this.userRequest('post', 'user/login', user);
-
-  public profile = (): Observable<any> => this.userRequest('get', 'user/profile');
 }

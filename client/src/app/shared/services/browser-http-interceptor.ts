@@ -2,22 +2,23 @@ import { Observable } from 'rxjs/Observable';
 import { of } from 'rxjs/observable/of';
 
 import { Injectable } from '@angular/core';
-import { HttpEvent, HttpInterceptor, HttpHandler, HttpRequest, HttpResponse } from '@angular/common/http';
-import { TransferState, makeStateKey } from '@angular/platform-browser';
+import { HttpEvent, HttpHandler, HttpInterceptor, HttpRequest, HttpResponse } from '@angular/common/http';
+import { makeStateKey, TransferState } from '@angular/platform-browser';
 
 @Injectable()
 export class BrowserHttpInterceptor implements HttpInterceptor {
 
-  constructor(private _transferState: TransferState) {}
+  constructor(private _transferState: TransferState) {
+  }
 
   intercept(request: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
 
     if (request.method !== 'GET') {
       return next.handle(request)
-      .catch((error: HttpResponse<any>) => {
-        this._handleError(error.url, error.status);
-        return Observable.throw(error);
-      })
+        .catch((error: HttpResponse<any>) => {
+          this._handleError(error.url, error.status);
+          return Observable.throw(error);
+        })
     }
 
     const storedResponse: string = this._transferState.get(makeStateKey(request.url), null);
@@ -44,10 +45,10 @@ export class BrowserHttpInterceptor implements HttpInterceptor {
         console.warn('HTTP status code: 410: ', url, statusCode); // tslint:disable-line no-console
         break;
       case 500:
-      console.warn('HTTP status code: 500: ', url, statusCode); // tslint:disable-line no-console
+        console.warn('HTTP status code: 500: ', url, statusCode); // tslint:disable-line no-console
         break;
       case 503:
-      console.warn('HTTP status code: 503: ', url, statusCode); // tslint:disable-line no-console
+        console.warn('HTTP status code: 503: ', url, statusCode); // tslint:disable-line no-console
         break;
       default:
         console.warn('HTTP status code: Unhandled ', url, statusCode); // tslint:disable-line no-console
