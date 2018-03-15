@@ -59,9 +59,17 @@ import { AppEffects } from './store/effects';
       provide: HTTP_INTERCEPTORS,
       useClass: BrowserHttpInterceptor,
       multi: true,
+    }, {
+      provide: 'LOCALSTORAGE',
+      useFactory: getLocalStorage
     }
+
   ],
   bootstrap: [AppComponent]
 })
 export class AppModule {
+}
+
+export function getLocalStorage() {
+  return (typeof window !== 'undefined') ? window.localStorage : null;
 }

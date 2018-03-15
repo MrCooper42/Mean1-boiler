@@ -1,6 +1,5 @@
 import { Router } from 'express';
 import { User } from '../models/user';
-import * as passport from 'passport';
 import * as jwt from 'express-jwt';
 
 const authRoutes = Router();
@@ -32,7 +31,8 @@ authRoutes.post('/register', (req, res) => {
     }
     if (foundUser) {
       console.log('this user exists HANDLE THIS ' + foundUser);
-      throw new Error('User Exists Already');
+      // throw new Error('User Exists Already');
+      console.log('User Exists Already');
       // TODO: Handle email already exists
     } else {
       let newUser;
@@ -77,8 +77,7 @@ authRoutes.post('/login', (req, res) => {
       });
     }
     if (!user || !user.validPassword(user, req.body.password)) {
-      console.log(user.validPassword(user, req.body.password));
-      return res.status(500).json({
+      return res.status(401).json({
         title: 'Login failed',
         error: {
           message: 'Invalid login credentials'

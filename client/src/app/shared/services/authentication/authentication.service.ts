@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { Inject, Injectable, PLATFORM_ID } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Router } from '@angular/router';
 import { Observable } from 'rxjs/Observable';
@@ -25,11 +25,10 @@ export interface TokenPayload {
 
 @Injectable()
 export class AuthenticationService {
-  private token: string;
   public logout = (): void => {
     this.token = '';
-    if (isPlatformBrowser) {
-      window.localStorage.removeItem('mean-token');
+    if (this.isBrowser) {
+      this.localStorage.removeItem('TOKEN');
     }
     this.router.navigateByUrl('/');
   }
@@ -44,15 +43,17 @@ export class AuthenticationService {
   public register = (user: TokenPayload): Observable<any> => this.userRequest('post', 'user/register', user);
   public login = (user: TokenPayload): Observable<any> => this.userRequest('post', 'user/login', user);
   public profile = (): Observable<any> => this.userRequest('get', 'user/profile');
+  private isBrowser: boolean;
+  private token: string;
   private saveToken = (token: string): void => {
-    if (isPlatformBrowser) {
-      localStorage.setItem('mean-token', token);
+    if (this.isBrowser) {
+      this.localStorage.setItem('TOKEN', token);
       this.token = token;
     }
   }
   private getToken = (): string => {
-    if (!this.token && isPlatformBrowser) {
-      this.token = localStorage.getItem('mean-token');
+    if (!this.token && this.isBrowser) {
+      this.token = this.localStorage.getItem('TOKEN');
       return this.token;
     }
     return null;
@@ -79,13 +80,17 @@ export class AuthenticationService {
     return request;
   }
 
-  constructor(private http: HttpClient, private router: Router) {
+  constructor(private http: HttpClient,
+              private router: Router,
+              @Inject(PLATFORM_ID) private platformId: any,
+              @Inject('LOCALSTORAGE') private localStorage: any) {
+    this.isBrowser = isPlatformBrowser(platformId);
   }
 
   public getUserDetails(): UserDetails {
     const token = this.getToken();
     let payload;
-    if (token) {
+    if (token && this.isBrowser) {
       payload = token.split('.')[1];
       payload = window.atob(payload);
       return JSON.parse(payload);

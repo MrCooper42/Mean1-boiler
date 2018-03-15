@@ -4,7 +4,7 @@ import { AuthenticationService, UserDetails } from '../shared/services/authentic
 @Component({
   selector: 'app-profile',
   templateUrl: './profile.component.html',
-  styleUrls: [ './profile.component.css' ]
+  styleUrls: ['./profile.component.css']
 })
 export class ProfileComponent implements OnInit {
 
@@ -15,6 +15,7 @@ export class ProfileComponent implements OnInit {
 
   ngOnInit() {
     this.auth.profile().subscribe(user => {
+      console.log(user, 'user in profile');
       this.details = user;
     }, (err) => {
       console.error(err);

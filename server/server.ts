@@ -5,10 +5,10 @@ if (process.env.NODE_ENV !== `production`) {
   process.env.NODE_ENV = `development`;
 }
 
-import { enableProdMode } from '@angular/core';
+// import { enableProdMode } from '@angular/core';
 import { ngExpressEngine } from '@nguniversal/express-engine';
 import { provideModuleMap } from '@nguniversal/module-map-ngfactory-loader';
-import { authRoutes } from './api/routes';
+import { router } from './api/routes';
 
 const express = require('express');
 const session = require('express-session');
@@ -79,7 +79,7 @@ app.set('view engine', 'html');
 app.set('views', path.join(DIST_FOLDER, 'client'));
 
 app.use(logger('dev'));
-app.use(bodyParser.urlencoded({extended: false}));
+app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
 app.use(cookieParser());
 
@@ -112,8 +112,8 @@ app.use((req, res, next) => {
 app.get('/', angularRouter);
 app.get('/login', angularRouter);
 
-app.use('/auth', authRoutes);
-// app.use('/api', billingRoutes);
+app.use('/api', router);
+// app.use('/auth', authRoutes);
 // app.use('/prod', productRoutes);
 // app.use('/cartApi', cartRoutes);
 // app.use('/admin', adminRoutes);
@@ -131,6 +131,24 @@ app.get('*', (req, res) => {
 app.use(compression());
 
 app.get('*', angularRouter);
+
+// catch 404 and forward to error handler
+app.use((req, res, next) => {
+  const err: { status?: number, message: string } = new Error('Not Found');
+  err.status = 404;
+  next(err);
+});
+
+// error handler
+app.use((err, req, res) => {
+  // set locals, only providing error in development
+  res.locals.message = err.message;
+  res.local.error = req.app.get('env') === 'development' ? err : {};
+
+  // TODO: render the error page
+  res.status(err.status || 500);
+  res.json({ 'message': `${err.name} : ${err.message}` });
+});
 
 app.listen(PORT, () => {
   console.log(`listening on http://localhost:${PORT}!`);
@@ -172,22 +190,6 @@ app.listen(PORT, () => {
 //
 // app.use('*', (req, res) => res.sendFile(path.join(__dirname, '../dist/index.html')));
 //
-// // catch 404 and forward to error handler
-// app.use((req, res, next) => {
-//   const err = new Error('Not Found');
-//   err.status = 404;
-//   next(err);
-// });
-//
-// // error handler
-// app.use((err, req, res) => {
-//   // set locals, only providing error in development
-//   res.locals.message = err.message;
-//   res.local.error = req.app.get('env') === 'development' ? err : {};
-//
-//   // TODO: render the error page
-//   res.status(err.status || 500);
-//   res.json({'message': `${err.name} : ${err.message}`});
-// });
+
 //
 // module.exports = app;

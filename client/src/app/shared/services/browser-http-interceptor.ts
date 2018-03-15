@@ -18,7 +18,7 @@ export class BrowserHttpInterceptor implements HttpInterceptor {
         .catch((error: HttpResponse<any>) => {
           this._handleError(error.url, error.status);
           return Observable.throw(error);
-        })
+        });
     }
 
     const storedResponse: string = this._transferState.get(makeStateKey(request.url), null);

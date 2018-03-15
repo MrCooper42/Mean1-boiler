@@ -4,6 +4,7 @@ const crypto = require('crypto');
 const jwt = require('jsonwebtoken');
 const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
+const keysConfig = require('../config/keys');
 
 const userSchema = new Schema({
   email: {
@@ -53,7 +54,7 @@ userSchema.methods.generateJwt = (user) => {
     email: user.email,
     name: user.name,
     exp: parseInt(expiry.getTime() / 1000, 10),
-  }, process.env.JWT_SECRET);
+  }, keysConfig.jwtToken);
   // TODO: Change this over to a properties file
 };
 
