@@ -1,5 +1,3 @@
-'use strict';
-
 const ProfileUser = require('../models/user.js').ProfileUser;
 
 const register = (req, res) => {

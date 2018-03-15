@@ -1,27 +1,43 @@
-# MEAN2-BoilerPlate
+# Angular universal with node.js and mongoDB
 
-This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 1.6.8.
-
-## Development server
-
-Run `ng serve` for a dev server. Navigate to `http://localhost:4200/`. The app will automatically reload if you change any of the source files.
-
-## Code scaffolding
-
-Run `ng generate component component-name` to generate a new component. You can also use `ng generate directive|pipe|service|class|guard|interface|enum|module`.
+Eshop with google login, cart save in session or user, test buy with stripe 
 
 ## Build
 
-Run `ng build` to build the project. The build artifacts will be stored in the `dist/` directory. Use the `-prod` flag for a production build.
 
-## Running unit tests
+Run `ng build --prod && ng build --prod --app 1 --output-hashing=none`
+<br />or <br />
+`npm run build:ssr`
 
-Run `ng test` to execute the unit tests via [Karma](https://karma-runner.github.io).
+## Serve
 
-## Running end-to-end tests
+Run `npm run start`
+<br />or <br />
+`ng serve`
 
-Run `ng e2e` to execute the end-to-end tests via [Protractor](http://www.protractortest.org/).
+## PREPARE ENVIROMENT
 
-## Further help
+Create dev.js in config and add keys as their are prepare in - dev.setThisFromExternalApiKeys <br />
+<br />
+mongoURI - use link to mongoDB database, e.g. from mlab.com
+<br /><br />
+googleClientID - create to set login through google - google API
+<br />
+googleClientSecret - create to set login through google - google API
+<br /><br />
+stripePublishableKey - set to work with stripe payments
+<br />
+stripeSecretKey - set to work with stripe payments
+<br />
+sendGridKey - set to use sendGrid
+<br /><br />
+cloudinaryName - set to upload images straight from angular to cloudinary
+<br />
+cloudinaryKey - set to upload images straight from angular to cloudinary
+<br />
+cloudinarySecret - set to upload images straight from angular to cloudinary
 
-To get more help on the Angular CLI use `ng help` or go check out the [Angular CLI README](https://github.com/angular/angular-cli/blob/master/README.md).
+## TEST ORDER
+
+-Use test credit card number for stripe for testing the order - 4242 4242 4242 4242
+

@@ -15,7 +15,7 @@ const userSchema = new Schema({
     type: String,
     required: true
   },
-  isAdmin: {
+  admin: {
     type: Boolean,
     default: false,
     required: true
@@ -24,6 +24,7 @@ const userSchema = new Schema({
     type: Date,
     default: Date.now
   },
+  images: [],
   hash: {
     type: String,
     default: "test"

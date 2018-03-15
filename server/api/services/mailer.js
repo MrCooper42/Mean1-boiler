@@ -1,11 +1,13 @@
+'use strict';
+
 const sendgrid = require('sendgrid');
 const helper = sendgrid.mail;
 const keys = require('../config/keys');
 
 
 class Mailer extends helper.Mail {
-  constructor(cart,reqEmail,orderId) {
-     super();
+  constructor(cart, reqEmail, orderId) {
+    super();
 
     this.sgApi = sendgrid(keys.sendGridKey);
 
@@ -25,13 +27,13 @@ class Mailer extends helper.Mail {
 
   async send() {
     const request = this.sgApi.emptyRequest({
-            method: 'POST',
-            path: '/v3/mail/send',
-            body: this.toJSON()
-        });
+      method: 'POST',
+      path: '/v3/mail/send',
+      body: this.toJSON()
+    });
 
-        const response = await this.sgApi.API(request);
-        return response;
+    const response = await this.sgApi.API(request);
+    return response;
   }
 }
 
@@ -41,13 +43,13 @@ module.exports = Mailer;
 
 function getContent(cart, orderId) {
 
-    function prepareItem(items) {
-      return items.map(product => {
-        return `<li>${product.item.title} ${product.price}€ ${product.qty}ks </li>`;
-      }) ;
-     }
+  function prepareItem(items) {
+    return items.map(product => {
+      return `<li>${product.item.title} ${product.price}€ ${product.qty}ks </li>`;
+    });
+  }
 
-     return `<html>
+  return `<html>
      <body>
      <div style="text-align:center;">
       <h3> Thank you for your order! </h3>
@@ -63,5 +65,5 @@ function getContent(cart, orderId) {
      </div>
      </body>
      </html>
-     `
-   }
+     `;
+}

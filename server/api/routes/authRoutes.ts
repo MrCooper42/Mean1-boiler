@@ -1,29 +1,29 @@
-import {Router} from 'express';
+import { Router } from 'express';
+import { User } from '../models/user';
 import * as passport from 'passport';
-import {User} from '../models/user.js';
 import * as jwt from 'express-jwt';
 
 const authRoutes = Router();
 const keyConfig = require('../config/keys');
 
-const ctrlProfile = require('../controllers/profileController.js');
+const ctrlProfile = require('../controllers/profileController');
 const auth = jwt({
   secret: `${keyConfig.jwtToken}`, // TODO: Fix this to use specific key
   userProperty: 'payload'
 });
-
-authRoutes.get('/google', passport.authenticate('google', {scope: ['profile', 'email']}));
-authRoutes.get('/google/callback', passport.authenticate('google'), (req, res) => res.redirect('/'));
-authRoutes.get('/logout', (req, res) => {
-  req.logout();
-  res.redirect('/');
-});
-authRoutes.get('/current_user', (req, res) =>
-  req.user ? res.send(req.user) : res.send({})
-);
+//
+// authRoutes.get('/google', passport.authenticate('google', { scope: ['profile', 'email'] }));
+// authRoutes.get('/google/callback', passport.authenticate('google'), (req, res) => res.redirect('/'));
+// authRoutes.get('/google/logout', (req, res) => {
+//   req.logout();
+//   res.redirect('/');
+// });
+// authRoutes.get('/current_user', (req, res) =>
+//   req.user ? res.send(req.user) : res.send({})
+// );
 
 authRoutes.post('/register', (req, res) => {
-  User.findOne({'email': req.body.email}, (error, foundUser) => {
+  User.findOne({ 'email': req.body.email }, (error, foundUser) => {
 
     if (error) {
       console.log(error, 'error');
@@ -98,4 +98,4 @@ authRoutes.post('/login', (req, res) => {
 
 authRoutes.get('/profile', auth, ctrlProfile.profileRead);
 
-export {authRoutes};
+export { authRoutes };

@@ -1,8 +1,8 @@
-import {authRoutes} from './authRoutes';
+import { authRoutes } from './authRoutes';
+import { adminRoutes } from './adminRoutes';
 // import { billingRoutes } from './billingRoutes';
 // import { productRoutes } from './productRoutes';
 // import { cartRoutes } from './cartRoutes';
-// import { adminRoutes } from './adminRoutes';
 
-export {authRoutes};
-// , billingRoutes, productRoutes, cartRoutes, adminRoutes};
+export { authRoutes, adminRoutes };
+// , billingRoutes, productRoutes, cartRoutes};

@@ -1,9 +1,14 @@
 require('zone.js/dist/zone-node');
 require('reflect-metadata');
 
-import {enableProdMode} from '@angular/core';
-import {ngExpressEngine} from '@nguniversal/express-engine';
-import {provideModuleMap} from '@nguniversal/module-map-ngfactory-loader';
+if (process.env.NODE_ENV !== `production`) {
+  process.env.NODE_ENV = `development`;
+}
+
+import { enableProdMode } from '@angular/core';
+import { ngExpressEngine } from '@nguniversal/express-engine';
+import { provideModuleMap } from '@nguniversal/module-map-ngfactory-loader';
+import { authRoutes } from './api/routes';
 
 const express = require('express');
 const session = require('express-session');
@@ -16,40 +21,36 @@ const bodyParser = require('body-parser');
 const expressSanitizer = require('express-sanitizer');
 const passport = require('passport');
 const fs = require('fs');
-const keys = require('./services/keys');
 const compression = require('compression');
 const jwt = require('express-jwt');
 const mongoose = require('mongoose');
 const MongoStore = require('connect-mongo')(session);
 
+const keyConfig = require('config/keys.js');
+
 const DIST_FOLDER = path.join(process.cwd(), '../dist');
 const template = fs.readFileSync(path.join(DIST_FOLDER, 'client', 'index.html')).toString();
-const { AppServerModuleNgFactory, LAZY_MODULE_MAP } = require('./dist/server/main.bundle');
+const { AppServerModuleNgFactory, LAZY_MODULE_MAP } = require('../dist/server/main.bundle');
 
 const PORT = process.env.PORT || 3000;
 
-// const auth = jwt({
-//   secret: `${process.env.JWT_SECRET}`, // TODO: make this use the config folder
-//   userProperty: 'payload'
-// });
+const auth = jwt({
+  secret: `${keyConfig.JWT_SECRET}`, // TODO: make this use the config folder
+  userProperty: 'payload'
+});
 
-// mongoose models TODO: make this single file.
-require('./models/User');
-require('./models/Product');
-require('./models/Order');
+// mongoose models
+require('models/db.js');
 
 // services
-require('./services/passport');
+require('services/passport');
 
 // connect mongoDB
-if (keys.mongoURI) {
-  mongoose.connect(keys.mongoURI);
+if (keyConfig.mongoURI) {
+  mongoose.connect(keyConfig.mongoURI);
 }
 
-import { authRoutes } from './api/routes';
-
-
-enableProdMode();
+// enableProdMode();
 
 function angularRouter(req, res) {
   res.render('index', { req, res });
@@ -87,7 +88,7 @@ app.use(
     cookie: {
       maxAge: 30 * 24 * 60 * 60 * 1000
     },
-    secret: keys.cookieKey,
+    secret: keyConfig.cookieKey,
     resave: false,
     saveUninitialized: false,
     store: new MongoStore({
@@ -119,7 +120,7 @@ app.use('/auth', authRoutes);
 
 app.get('*.*', express.static(path.join(DIST_FOLDER, 'browser')));
 
-// app.use(express.static(`${__dirname}/dist/browser`));
+app.use(express.static(`${__dirname}/dist/client`));
 
 app.get('*', (req, res) => {
   res.render(path.join(DIST_FOLDER, 'browser', 'index.html'), { req });
@@ -128,7 +129,7 @@ app.get('*', (req, res) => {
 // compress files
 app.use(compression());
 
-// app.get('*', angularRouter);
+app.get('*', angularRouter);
 
 app.listen(PORT, () => {
   console.log(`listening on http://localhost:${PORT}!`);
