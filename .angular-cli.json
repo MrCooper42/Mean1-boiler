@@ -30,7 +30,7 @@
       }
     },
     {
-      "name": "universal.server",
+      "name": "server",
       "platform": "server",
       "root": "client/src",
       "outDir": "dist/browser",
