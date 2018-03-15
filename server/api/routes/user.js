@@ -5,7 +5,7 @@ const router = express.Router();
 const jwt = require('express-jwt');
 const User = require('../models/user.js').User;
 
-const ctrlProfile = require('../controllers/profile.js');
+const ctrlProfile = require('../controllers/profileController.ts');
 const auth = jwt({
   secret: `${process.env.JWT_SECRET}`,
   userProperty: 'payload'

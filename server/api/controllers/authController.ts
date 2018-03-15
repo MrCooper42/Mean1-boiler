@@ -4,8 +4,8 @@ const passport = require('passport');
 const mongoose = require('mongoose');
 const User = mongoose.model('User');
 
-const register = (req, res) => {
-  let user = new User;
+const registerUser = (req, res) => {
+  const user = new User;
 
   user.name = req.body.name;
   user.email = req.body.email;
@@ -18,13 +18,13 @@ const register = (req, res) => {
     } else {
       let token;
       token = user.generateJwt();
-      console.log(token, "token");
+      console.log(token, 'token');
       res.status(200);
       res.json({
-        "token": token
+        'token': token
       });
     }
-  }).catch((err) => console.log(err, "catch error in register"));
+  }).catch((err) => console.log(err, 'catch error in registerUser'));
 };
 
 const login = (req, res) => {
@@ -39,7 +39,7 @@ const login = (req, res) => {
       token = user.generateJwt();
       res.status(200);
       res.json({
-        "token": token
+        'token': token
       });
     } else {
       res.status(401).json(info);
@@ -48,6 +48,6 @@ const login = (req, res) => {
 };
 
 module.exports = {
-  register: register,
+  registerUser: registerUser,
   login: login
 };
